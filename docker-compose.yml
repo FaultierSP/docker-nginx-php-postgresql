@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  app:
+    build: 
+     dockerfile: Dockerfile
+    container_name: nginx_php_postgresql
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php_src:/var/www/html
+      - ./nginx_server.conf:/etc/nginx/conf.d/default.conf
+  
+  php-fpm:
+    image: php:8.2-fpm
+    volumes:
+      - ./php_src:/var/www/html
+
+  postgresql:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: username
+      POSTGRES_USER: database
+      POSTGRES_PASSWORD: secretpassword
