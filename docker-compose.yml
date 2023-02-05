@@ -4,18 +4,19 @@ services:
 
   nginx:
     image: nginx:latest
+    restart: always
     ports:
       - ${APP_PORT}:80
     volumes:
       - ${PHP_SOURCE}:/var/www/html
       - ./nginx_server.conf:/etc/nginx/conf.d/default.conf
-    restart: always
   
   php-fpm:
     image: php:fpm
+    restart: always
     build:
       context: . 
-      dockerfile: Dockerfile
+      dockerfile: php_Dockerfile
     volumes:
       - ${PHP_SOURCE}:/var/www/html
       - ./php_ini:/usr/local/etc/php/custom.d
@@ -27,6 +28,11 @@ services:
   postgresql:
     image: postgres:latest
     restart: always
+    build:
+      context: . 
+      dockerfile: postgresql_Dockerfile
+    volumes:
+      - ./sql_data:/var/lib/postgresql/data
     expose:
       - ${DB_PORT}
     environment:
@@ -37,14 +43,15 @@ services:
     depends_on:
       - php-fpm
   
-  # pgadmin:
-  #   image: dpage/pgadmin4:latest
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
-  #     PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
-  #     PGADMIN_DISABLE_POSTFIX: 'yep'
-  #     PGADMIN_LISTEN_PORT: ${PGADMIN_PORT}
-  #   ports:
-  #     - ${PGADMIN_PORT}:${PGADMIN_PORT}
-  #   depends_on:
-  #     - postgresql
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_DISABLE_POSTFIX: 'yep'
+      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT}
+    ports:
+      - ${PGADMIN_PORT}:${PGADMIN_PORT}
+    depends_on:
+      - postgresql
