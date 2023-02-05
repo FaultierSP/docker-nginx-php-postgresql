@@ -1,5 +1,6 @@
-FROM php:8.2-fpm
+FROM php:fpm
 
-RUN apt update && apt install libpq-dev -y
-
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && docker-php-ext-install pdo_pgsql pgsql
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install libpq-dev
+    
+RUN docker-php-ext-install pdo_pgsql pgsql
