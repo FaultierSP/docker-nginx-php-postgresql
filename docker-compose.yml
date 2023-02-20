@@ -20,6 +20,7 @@ services:
     volumes:
       - ${PHP_SOURCE}:/var/www/html
       - ./php_ini:/usr/local/etc/php/custom.d
+      - ./nginx_logs:/var/log/nginx
     environment:
       PHP_INI_SCAN_DIR: "/usr/local/etc/php/custom.d:/usr/local/etc/php/conf.d"
     depends_on:
