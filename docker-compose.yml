@@ -5,6 +5,7 @@ services:
   nginx:
     image: nginx:latest
     restart: unless-stopped
+    # Possible options: no,on-failure[:max-retries],always,unless-stopped
     ports:
       - ${APP_PORT}:80
     volumes:
@@ -14,7 +15,6 @@ services:
   php-fpm:
     image: php:fpm
     restart: unless-stopped
-    # Possible options: no,on-failure[:max-retries],always,unless-stopped
     build:
       context: . 
       dockerfile: php_Dockerfile
