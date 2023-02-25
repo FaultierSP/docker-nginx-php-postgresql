@@ -4,7 +4,7 @@ services:
 
   nginx:
     image: nginx:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - ${APP_PORT}:80
     volumes:
@@ -13,7 +13,8 @@ services:
   
   php-fpm:
     image: php:fpm
-    restart: always
+    restart: unless-stopped
+    # Possible options: no,on-failure[:max-retries],always,unless-stopped
     build:
       context: . 
       dockerfile: php_Dockerfile
@@ -28,7 +29,7 @@ services:
 
   postgresql:
     image: postgres:latest
-    restart: always
+    restart: unless-stopped
     build:
       context: . 
       dockerfile: postgresql_Dockerfile
@@ -46,7 +47,7 @@ services:
   
   pgadmin:
     image: dpage/pgadmin4:latest
-    restart: always
+    restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
